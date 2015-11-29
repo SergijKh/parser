@@ -9,20 +9,7 @@ import java.util.List;
  * root table  when table have all foreign key anther table
  */
 public class Table {
-	/**
-	 * @return the root
-	 */
-	public boolean isRoot() {
-		return root;
-	}
-
-
-	/**
-	 * @param root the root to set
-	 */
-	public void setRoot(boolean root) {
-		this.root = root;
-	}
+	
 	/**
 	 * names table
 	 */
@@ -66,6 +53,15 @@ public class Table {
 		this.listField = listField;
 		this.root = root;
 	}
+/**
+ * 
+ * @param nameTable
+ */
+
+	public Table(String nameTable) {
+		super();
+		this.nameTable = nameTable;
+	}
 
 
 	/**
@@ -89,8 +85,23 @@ public class Table {
 	/**
 	 * @param listField the listField to set
 	 */
-	public void setListField(List<Field> listField) {
+	public void setListFeald(List<Field> listField) {
 		this.listField = listField;
+	}
+	
+	/**
+	 * @return the root
+	 */
+	public boolean isRoot() {
+		return root;
+	}
+
+
+	/**
+	 * @param root the root to set
+	 */
+	public void setRoot(boolean root) {
+		this.root = root;
 	}
  
 }

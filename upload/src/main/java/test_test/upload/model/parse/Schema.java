@@ -41,6 +41,14 @@ public class Schema {
 		this.listTable = listTable;
 		this.id = id;
 	}
+/**
+ * 
+ * @param id
+ */
+	public Schema(String id) {
+		super();
+		this.id = id;
+	}
 
 	/**
 	 * @return the listTable

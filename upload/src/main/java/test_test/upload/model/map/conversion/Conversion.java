@@ -1,6 +1,7 @@
 package test_test.upload.model.map.conversion;
 
 import java.util.List;
+import java.util.Map;
 
 import test_test.upload.model.map.substitute.Substitute;
 
@@ -13,11 +14,11 @@ public class Conversion {
 	/**
 	 * foreign keys that need to change in root table
 	 */
-	private List <LookUp> lookUp;
+	private List <Map<String,String>> lookUp;
 	 /**
 	  * list substitute
 	  */
-	 private List<Substitute> listSubstitude;
+	 private List<Substitute> listSubstitute;
 	 
 	/**
 	 * empty constructor
@@ -32,11 +33,11 @@ public class Conversion {
 	 * @param lookUp
 	 * @param listSubstitude
 	 */
-	public Conversion(List<FieldFormat> format, List<LookUp> lookUp,
-			List<Substitute> listSubstitude) {
+	public Conversion(List<FieldFormat> format, List<Map<String,String>> lookUp,
+			List<Substitute> listSubstitute) {
 		this.format = format;
 		this.lookUp = lookUp;
-		this.listSubstitude = listSubstitude;
+		this.listSubstitute = listSubstitute;
 	}
 
 	/**
@@ -49,36 +50,36 @@ public class Conversion {
 	/**
 	 * @param format the format to set
 	 */
-	public void setFormat(List<FieldFormat> format) {
+	public void setListFormat(List<FieldFormat> format) {
 		this.format = format;
 	}
 
 	/**
 	 * @return the lookUp
 	 */
-	public List<LookUp> getLookUp() {
-		return lookUp;
+	public List<Map<String,String>>getLookUp() {
+		return  lookUp;
 	}
 
 	/**
-	 * @param lookUp the lookUp to set
+	 * @param listLookUp the lookUp to set
 	 */
-	public void setLookUp(List<LookUp> lookUp) {
-		this.lookUp = lookUp;
+	public void setLookUp(List<Map<String, String>> listLookUp) {
+		this.lookUp = listLookUp;
 	}
 
 	/**
 	 * @return the listSubstitude
 	 */
-	public List<Substitute> getListSubstitude() {
-		return listSubstitude;
+	public List<Substitute> getListSubstitute() {
+		return listSubstitute;
 	}
 
 	/**
 	 * @param listSubstitude the listSubstitude to set
 	 */
-	public void setListSubstitude(List<Substitute> listSubstitude) {
-		this.listSubstitude = listSubstitude;
+	public void setListSubstitute(List<Substitute> listSubstitude) {
+		this.listSubstitute = listSubstitude;
 	}
 
 	

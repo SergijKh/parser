@@ -17,7 +17,7 @@ public class MapSource {
 	/**
 	 * list field which need removes spaces before as put in table  
 	 */
-	private List<Conversion> listConversion;
+	private  Conversion conversion;
 	
 	
 
@@ -37,10 +37,10 @@ public class MapSource {
 	 * @param listConversion
 	 */
 	public MapSource(String idSource, String idSchema,
-			List<Conversion> listConversion) {
+			Conversion conversion) {
 		this.idSource = idSource;
 		this.idSchema = idSchema;
-		this.listConversion = listConversion;
+		this.conversion =conversion;
 	}
 
 	/**
@@ -74,15 +74,15 @@ public class MapSource {
 	/**
 	 * @return the listConversion
 	 */
-	public List<Conversion> getListConversion() {
-		return listConversion;
+	public Conversion getConversion() {
+		return conversion;
 	}
 
 	/**
 	 * @param listConversion the listConversion to set
 	 */
-	public void setListConversion(List<Conversion> listConversion) {
-		this.listConversion = listConversion;
+	public void seConversion(Conversion conversion) {
+		this.conversion = conversion;
 	}
 
 	

@@ -5,7 +5,9 @@ package test_test.upload.model.form;
  * class  Field describe field in table
  */
 public class Field {
-	 /**
+	 
+
+	/**
 	  * name field
 	  */
 	private String name;
@@ -32,7 +34,17 @@ public class Field {
 	public Field(String name) {
 		this.name = name;
 	}
-	
+	/**
+	 * 
+	 * @param name name field 
+	 * @param nameTableForeignKey foreign key
+	 */
+
+	public Field(String name, String nameTableForeignKey) {
+		super();
+		this.name = name;
+		this.nameTableForeignKey = nameTableForeignKey;
+	}
 
 	/**
 	 * @param name 
@@ -68,6 +80,7 @@ public class Field {
 
 	/**
 	 * @param nameTableForeignKey the nameTableForeignKey to set
+	 * @return 
 	 */
 	public void setNameTableForeignKey(String nameTableForeignKey) {
 		this.nameTableForeignKey = nameTableForeignKey;
