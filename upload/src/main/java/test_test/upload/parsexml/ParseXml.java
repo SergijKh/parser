@@ -51,10 +51,10 @@ public class ParseXml implements IParse {
 
 	private static final String MAP = "map";
 	private static final String CONVERSION = "conversion";
-	private static final String TRIM = "trim";
-	private static final String LEFT = "left";
-	private static final String RIGHT = "right";
-	private static final String MID = "right";
+	public static final String TRIM = "trim";
+	public  static final String LEFT = "left";
+	public  static final String RIGHT = "right";
+	public  static final String MID = "mid";
 	private static final String FIELD_NAME = "field_name";
 	private static final String LOOKUP = "lookup";
 	public static final String LOOKUP_VARIABLE = "lookup_variable";
@@ -67,6 +67,8 @@ public class ParseXml implements IParse {
 	private static final String TARGET = "target";
 	private static final String VARIABLE = "variable";
 	private static final String CONSTANT ="constant";
+	private static final String LENGTH  = "length";
+	private static final String START_NUM ="start_num";
 	
 	private File fileXml;
 
@@ -78,6 +80,11 @@ public class ParseXml implements IParse {
 	public ParseXml(File fileXml) {
 		this.fileXml = fileXml;
 
+	}
+
+	public ParseXml() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -208,8 +215,6 @@ public class ParseXml implements IParse {
 									if (conversionList.item(con).getNodeType() == Node.ELEMENT_NODE) {
 										getForamtList(fieldForamtList,
 												conversionList, con);
-									
-								
 										getLookUPList(lookUpList,
 												conversionList, con);
 										if (conversionList.item(con)
@@ -343,6 +348,14 @@ public class ParseXml implements IParse {
 					conversionList.item(con).getNodeName(),
 					((Element) conversionList.item(con))
 							.getAttribute(FIELD_NAME));
+			if (((Element) conversionList.item(con)).hasAttribute(LENGTH)){
+				fildFormat.setLengthSybol(Integer.parseInt(((Element) conversionList.item(con))
+							.getAttribute(LENGTH)));
+			}
+			if (((Element) conversionList.item(con)).hasAttribute(START_NUM)){
+				fildFormat.setStartNum(Integer.parseInt(((Element) conversionList.item(con))
+							.getAttribute(START_NUM)));
+			}
 			fieldForamtList.add(fildFormat);
 		}
 	}

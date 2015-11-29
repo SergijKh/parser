@@ -1,0 +1,96 @@
+The sample database structure that consist of the following tables:
+- Client with fields:
+   - Client_No
+   - Client_Name
+- Supplier with fields:
+   - Supplier_No
+   - Supplier_Name
+- Product with fields:
+   - Product_No
+   - Product_Description
+- Order with fields:
+   - Order_No
+   - Client_No
+   - Supplier_No
+   - Product_No
+   - Quantity
+   - Delivery_Date
+
+<upload>
+<!-- "upload" tag is one and only one root tag. It will have tags "schema", "source" and "map".
+Before continue reading, read schema, source and map tags first so that you can understand what I am talking about here....
+
+The program will read xml, parse it and upload data from source to "schema" while also performing additional mapping as stated in "map" tag. 
+Read schema and build a tree in the memory. The tree will always have one root and one ore more leaves, database "INSERT" and "UPDATE" statements should first be performed on leaves, then one one level above, then one level above etc., until root.
+Start reading line by line from source, once line is red, perform (on leaves first, them move above level by level) database "INSERT" or "UPDATE" depending on the "UM___" field value. Once database "INSERT or UPDATE" is executed, read the record back from the database (by using "SELECT" or if table has auto increment field and the field is no in the source, then by finding out what the auto increment value was and again reading record back by "SELECT" statement). Read record back from database is needed to read any database DEFAULT and auto increment fields (or to make sure any database background jobs or triggers' updates are captured). Once data for this line is read back from database set internal context variables to the right values (e.g. once Client record is added via "INSERT" and red back via "SELECT" - populate internal or context variables "Client.Client_No" and "Client.Client_Name" with values. If Client_No is auto increment field it will get value from database). Context variables act and valid for the current line of data and automatically applied to all foreign keys for this line but only if value for foreign key is not specified in the source (in our example, for Orders, if there is no Client_No on the source at all or if Client_No by some reason is empty assuming Client_No in database IS NOT NULL, then populate Client_No with the context variable. In other word, once Client is inserted in the database, all foreign keys in this line will get updated with the Client_No if for these tables Client_No is empty or not on the file at all). 
+The following high level logic of the program:
+- Read a line from source 
+- Populate context variables
+- Modify context variables according to conversion rules in "map"-"conversion" tag
+- begin transaction
+- start from leaves:
+---INSERT or UPDATE
+--- read record back from the database
+--- update context variables
+--- go to the next level up from leaves toward root
+- repeat the same logic as described above for leaves, then for each level up and up until root
+- end transaction, if any error while inserting or updating any table, roll back, if all successful then commit 
+- write updated line back to the source, as specified in "outfile" tag, add error or success message to each error column ( e.g. Client.ERR___ ="INSERTED or UPDATED", Order.ERR___="Order cannot be added delivery date is in the past"). 
+
+Make a source infile and outfile implemented via an interface, so that infile reader and outfile writer can be easily replace e.g. with database reader and writer.
+
+-->
+<schema id="schema1">
+  <!-- "schema" tag has at least one nested "table" tags, tables that participate in the schema, id is identifier of the schema. Tables themselves, have nested fields tags that describe which fields participate in the schema
+ -->
+  <table name="Order" root="true">
+     <!-- "table" tag has at least one nested "field" tags, each "field" tag describes a field that participate in the schema. There should always be exactly one table with "root=true" (root attribute is optional if omitted then =false), this is root table. Root table can only refers to another table(s) in the database, and no other tables refer to root table at least in schema.
+      -->
+     <field name="Order_No"/>
+     <!-- for tag "field" the following attributes are required or optional: 
+            "name"- required
+            "foreign_key_table" - optional, if populated, then the field refers to the table, field name is the same, no other tables should refer root table. The table mentioned must be on the schema, otherwise error.
+            field type is red from the database
+            detect if there are any recurring links (e.g. Order->Client->Address->Order), error if so.
+Not all database fields can be on the schema. If non existent in database field is mentioned then error.
+-->
+     <field name="Client_No" foreign_key_table="Client"/>
+  </table>
+  <table name="Client">.... fields... </table>
+</schema>
+
+<source id="src1">
+<!-- tag "source" describes where the data will be flowing from. Source tag must have at least one nested tag (right now "infile" tag must be in "source", "outfile" tag is optional-->
+  <infile" format="txt-tab" header_rows="2" field_names_row_numer="1" field_names_format="table.field" update_mode_field_name="UM___" path="C:\src.txt"/>
+  <!-- Right now we will support only "infile" tag, and only support "txt-tab" format of the file (text file tab delimited). "header_rows" tag define how many lines should be skipped because they have some other information other than data. "field_names_row_numer" tells in which row field names are. Right now we will support only field_names_format="table.field", which means TableName.FieldName (e.g. Client.Client_Name). 
+update_mode_field_name="UM___" - in the input source (e.g. file) there will always be Update Mode field (column) that will tell whether this particular line should be "I" - insert or "U" - updated in the database table or "" means nothing no be done. Each table can have its own "UM___" column, if omitted then "I" is default.  
+-->
+<outfile format="txt-tab" error_column="ERR___" path="C:\output.txt"/> 
+<!-- Output file will be created based on infile and its transformation while updating database, additional columns will be added for error of each participating table, or successful status updated if no errors-->
+
+</source>
+
+<map source="src1" schema="schema1">
+  <conversion>
+<!--"conversion" is an optional tag within"map", inside there might be conversion tags that will be used to alter/change input/source data before data will flow into the schema/tables. Conversion tags to be applied in the same order they are in the xml descriptor-->
+     <trim field_name="Client.Client_Name"/> <!-- trims the field, removes spaces-->
+     <left field_name="Client.Client_Name" length=15/>
+     <right field_name="Client.Client_Name" length=15/>
+     <mid field_name="Client.Client_Name" start_num=5 length=15/>
+     <vlookup lookup_variable="Client.Client_No" lookup_table="Client" lookup_col_in_table="Client_No" result_col_in_table="Client_Name" update_into_variable="Order.Client_Name"/>
+     <substitute>
+<!--"substitute" tag will have nested tags to carry out substitution on context variables. One required tag "target" will define which context variable will be substituted. "value" tag will determine the value itself-->
+        <target variable="Order.Delivery_Date"/> <!--one target context variable per substitution, this variable value will be substituted-->
+        <value>
+<!--"value" tag will calculate values of individual tags within it, and concatenate them in order in which they appear under "value" tag-->
+           <trim/> <!--sane as "trim" tag above, it returns trimmed version of context variable-->
+           <left/> <!-- same as "left" tag above, returns left symbols of context variable-->
+           <right/> <!-- same as "right" tag above, returns right symbols of context variable-->
+           <vlookup/> <!-- same as "vlookup" tag above except that it does not update context variable and hence does not have attribute "update_into_variable"-->
+           <constant value="Const1"/> <!--to be used to insert additional texts-->
+        </value>
+     </substitute>
+  </conversion>
+</map>
+
+</upload>

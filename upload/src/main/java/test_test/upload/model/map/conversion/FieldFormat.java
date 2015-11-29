@@ -11,7 +11,16 @@ public class FieldFormat {
 	private  String fieldName;
 	/**
 	 * empty constructor
+	 * 
 	 */
+	/**
+	 * value field start  in startSymbol
+	 */
+	private int  startNum ;
+	/**
+	 * length symbol in field 
+	 */
+	private int  lengthSybol;
 	public FieldFormat() {
 		super();
 
@@ -27,6 +36,15 @@ public class FieldFormat {
 		this.nameFormat = nameFormat;
 		this.fieldName = fieldName;
 	}
+	
+	public FieldFormat(String nameFormat, String fieldName, int startNum,
+			int lengthSybol) {
+		super();
+		this.nameFormat = nameFormat;
+		this.fieldName = fieldName;
+		this.startNum = startNum;
+		this.lengthSybol = lengthSybol;
+	}
 	public String getNameFormat() {
 		return nameFormat;
 	}
@@ -38,6 +56,18 @@ public class FieldFormat {
 	}
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
+	}
+	public int getStartNum() {
+		return startNum;
+	}
+	public void setStartNum(int startNum) {
+		this.startNum = startNum;
+	}
+	public int getLengthSybol() {
+		return lengthSybol;
+	}
+	public void setLengthSybol(int lengthSybol) {
+		this.lengthSybol = lengthSybol;
 	}
 	
       

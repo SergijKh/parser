@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name='upload'>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name='schema' type='schemaType' minOccurs='1' maxOccurs='unbounded' />
+			 <xs:element name='source' type='sourceType' minOccurs='1' maxOccurs='unbounded' />
+			  <xs:element name='map' type='mapType' minOccurs='1' maxOccurs='unbounded' />
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:complexType name='schemaType'>
+      <xs:sequence>
+         <xs:element name='table' type='tableType' minOccurs='1' maxOccurs='unbounded'  />
+      </xs:sequence>
+	  	    <xs:attribute name='id' type='xs:string'/>
+   </xs:complexType>
+   <xs:complexType name="tableType">
+      <xs:sequence>
+         <xs:element name='field' type='fieldType' minOccurs='1' maxOccurs='unbounded'/>
+      </xs:sequence>
+      <xs:attribute name='name' type='xs:string' use='required'/>
+	    <xs:attribute name='root' type='xs:boolean' use='optional'/>
+   </xs:complexType>
+  
+  <xs:complexType name='fieldType'>
+      <xs:attribute name='name' type='xs:string' use='required'/>
+	  <xs:attribute name='foreign_key_table' type='xs:string' use='optional' />
+   </xs:complexType>
+   
+   <xs:complexType name='sourceType'>
+      <xs:sequence>
+         <xs:element name='infile' type='infileType'/>
+		 <xs:element name='outfile' type='outfileType'/>
+      </xs:sequence>
+      <xs:attribute name='id' type='xs:string'/>
+   </xs:complexType>
+   <xs:complexType name="infileType">
+      <xs:attribute name='format' type='xs:string' use='required'/>
+	  <xs:attribute name='header_rows' type='xs:integer' use='optional' />
+	  <xs:attribute name='field_names_row_numer' type='xs:integer' use='optional' />
+	  <xs:attribute name='field_names_format' type='xs:string' use='required' />
+	   <xs:attribute name='update_mode_field_name' type='update_mode_field_nameType' use='optional' default='I' /> 
+	     <xs:attribute name='path' type= 'xs:string' use='required' />
+   </xs:complexType>
+   
+    <xs:simpleType name = 'update_mode_field_nameType'>
+	 <xs:restriction base='xs:token'>
+      <xs:pattern value='I|U'/>
+    </xs:restriction>
+ </xs:simpleType>
+	 <xs:complexType name='outfileType'>
+      <xs:attribute name='format' type='xs:string' use='required'/>
+	  <xs:attribute name='error_column' type='xs:string' use='optional' />
+	  <xs:attribute name='path' type='xs:string' use='required' />
+   </xs:complexType>
+   
+   <xs:complexType name='mapType'>
+      <xs:sequence>
+         <xs:element name='conversion' type='conversionType' minOccurs='0' maxOccurs='unbounded' />
+      </xs:sequence>
+      <xs:attribute name='source' type='xs:string' use='required'/>
+	  <xs:attribute name='schema' type='xs:string' use='required'/>
+   </xs:complexType>
+   <xs:complexType name='conversionType'>
+     
+        <xs:sequence>
+            <xs:element name='trim' type='trimType' minOccurs='0' maxOccurs='unbounded' />
+			 <xs:element name='left' type='trimType' minOccurs='0' maxOccurs='unbounded' />
+			 <xs:element name='right' type='trimType' minOccurs='0' maxOccurs='unbounded' />
+		     <xs:element name='mid' type='trimMidType' minOccurs='0' maxOccurs='unbounded' />
+			 <xs:element name='lookup' type='lookupType' minOccurs='0' maxOccurs='unbounded' />
+			 <xs:element name='substitude' type='substitudeType' minOccurs='0' maxOccurs='unbounded' />
+      </xs:sequence>
+   </xs:complexType>
+   
+   <xs:complexType name='trimType'>
+      <xs:attribute name='field_name' type='xs:string' use='required'/>
+	  <xs:attribute name="length" type="xs:integer" use='optional' />
+   </xs:complexType>
+   <xs:complexType name='trimMidType'>
+      <xs:attribute name='field_name' type='xs:string' use='required'/>
+	   <xs:attribute name='start_num' type='xs:integer' use='required' />
+	  <xs:attribute name="length" type='xs:integer' use='required' />
+   </xs:complexType>
+  <xs:complexType name='lookupType'>
+      <xs:attribute name='lookup_variable' type='xs:string' use='required'/>
+	   <xs:attribute name='lookup_table' type='xs:string' use='required' />
+	  <xs:attribute name='lookup_col_in_table' type='xs:string' use='required' />
+	    <xs:attribute name="result_col_in_table" type='xs:string' use='required' />
+		  <xs:attribute name='update_into_variable' type='xs:string' use='optional' />
+   </xs:complexType>
+   <xs:complexType name='substitudeType'>
+      <xs:sequence>
+		   <xs:element name='target' type='targetType'/>
+		    <xs:element name='value' type='valueType'/>
+      </xs:sequence> 
+   </xs:complexType>
+   <xs:complexType name='targetType'>
+      <xs:attribute name='variable' type='xs:string' use='required'/>
+   </xs:complexType>
+    <xs:complexType name='valueType'>
+	<xs:sequence>
+	  <xs:element name='trim' type='trimType' minOccurs='0' maxOccurs='unbounded' />
+	  <xs:element name='left' type='trimType' minOccurs='0' maxOccurs='unbounded' />
+	  <xs:element name='right' type='trimType' minOccurs='0' maxOccurs='unbounded' />
+	  <xs:element name='mid' type='trimMidType' minOccurs='0' maxOccurs='unbounded' />
+	  <xs:element name='lookup' type='lookupType' minOccurs='0' maxOccurs='unbounded' />
+	  <xs:element name='constant' type='constantType' minOccurs='0' maxOccurs='unbounded' />
+  </xs:sequence> 
+ </xs:complexType>
+   <xs:complexType name='constantType'>
+      <xs:simpleContent>
+	   <xs:extension base = 'xs:string'>
+	  <xs:attribute name='value' type='xs:string' use='required'/>   
+	   </xs:extension>
+	  </xs:simpleContent>
+   </xs:complexType>
+</xs:schema>
