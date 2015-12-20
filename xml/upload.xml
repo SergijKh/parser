@@ -7,12 +7,14 @@
    <field name='Client_No'/>
    <field name='Client_Name'/>
 </table>
-<table name='Order' >
+<table name='Order' root ='true'>
    <field name='Order_No'/>
     <field name='Client_No' foreign_key_table='Client'/>
     <field name='Quantity' />
 	<field name='Delivery_Date'/>
+	<field name='Goods_Name'/>
 </table>
+
 </schema>
 
 <source id='src1'>
@@ -21,16 +23,20 @@
 </source>
 <map source = 'src1' schema='schema1'>
 <conversion>
- <trim field_name='Client.Name' />
- <lookup lookup_variable ='Client.Client_No'  lookup_table='Client' lookup_col_in_table ='Client_No'  result_col_in_table='Client_Name' update_into_variable='Order.Client_Name' />
+ <trim field_name='Client.Name'/>
+ <lookup lookup_variable ='Goods.Goods_No'  lookup_table='Goods' lookup_col_in_table ='Goods_No'  result_col_in_table='Goods_Name' update_into_variable='Order.Goods_Name' />
 
  <substitude>
-    <target variable = 'Order.Delivery_Date'/>
+    <target variable = 'Order.Quantity'/>
 	 <value>
-	 <trim field_name='Delivery_Date' />
-	 <lookup lookup_variable ='Order.Delivery_Date' lookup_table='Order' lookup_col_in_table ='Delivery_Date'  result_col_in_table='Order.Delivery_Date'  />
+	 <trim field_name='Order.Quantity' />
+	 <left field_name='Goods.Goods_Name' length = '4'/>
+	 <lookup lookup_variable ='Goods.Goods_No' lookup_table='Goods' lookup_col_in_table ='Goods_No'  result_col_in_table='Goods_Name'/>
 	 <constant value='Contst1'>
-	        
+	      -  
+	</constant>
+	<constant value='Contst2'>
+	      +
 	</constant>
 	</value>
  </substitude>
