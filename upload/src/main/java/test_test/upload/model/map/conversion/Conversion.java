@@ -6,6 +6,7 @@ import java.util.Map;
 import test_test.upload.model.map.substitute.Substitute;
 
 public class Conversion {
+	
 	/**
 	 * field which need format 
 	 * @see FieldFormat

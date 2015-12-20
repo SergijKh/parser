@@ -37,6 +37,19 @@ public class FieldFormat {
 		this.fieldName = fieldName;
 	}
 	
+	/**
+	 * Constructor name format  field name and length symbol;
+	 * @param nameFormat
+	 * @param fieldName
+	 * @param lengthSybol
+	 */
+	
+	public FieldFormat(String nameFormat, String fieldName, int lengthSybol) {
+		super();
+		this.nameFormat = nameFormat;
+		this.fieldName = fieldName;
+		this.lengthSybol = lengthSybol;
+	}
 	public FieldFormat(String nameFormat, String fieldName, int startNum,
 			int lengthSybol) {
 		super();

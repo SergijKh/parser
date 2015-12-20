@@ -28,47 +28,12 @@ import test_test.upload.model.map.substitute.Value;
 import test_test.upload.model.parse.MapSource;
 import test_test.upload.model.parse.Schema;
 import test_test.upload.model.parse.Source;
+import test_test.upload.model.staticvariablesxmlfile.StaticVariablesXML;
 
 @Component
 public class ParseXml implements IParse {
 	private static final Logger logger1 = Logger.getLogger(ParseXml.class);
-	private static final String SOURCE = "source";
-	private static final String ID = "id";
-	private static final String INFILE = "infile";
-	private static final String OUTFILE = "outfile";
-	private static final String FORMAT = "format";
-	private static final String HEADER_ROWS = "header_rows";
-	private static final String FIELD_NAMES_ROW_NUMER = "field_names_row_numer";
-	private static final String FIELD_NAMES_FORMAT = "field_names_format";
-	private static final String UPDATE_MODE_FIELD_NAME = "update_mode_field_name";
-	private static final String PATH = "path";
-	private static final String ERROR_COLUMN = "error_column";
-	private static final String TABLE = "table";
-	private static final String NAME = "name";
-	private static final String FOREIGN_KEY_TABLE = "foreign_key_table";
-	private static final String FIELD = "field";
-	private static final String SCHEMA = "schema";
-
-	private static final String MAP = "map";
-	private static final String CONVERSION = "conversion";
-	public static final String TRIM = "trim";
-	public  static final String LEFT = "left";
-	public  static final String RIGHT = "right";
-	public  static final String MID = "mid";
-	private static final String FIELD_NAME = "field_name";
-	private static final String LOOKUP = "lookup";
-	public static final String LOOKUP_VARIABLE = "lookup_variable";
-	public  static final String LOOKUP_TABLE = "lookup_table";
-	public  static final String LOOKUP_COL_IN_TABLE = "lookup_col_in_table";
-	public static final String RESULT_COL_IN_TABLE = "result_col_in_table";
-	public  static final String UPDATE_INTO_VARIABLE = "update_into_variable";
-	private static final String SUBSTITUDE = "substitude";
-	private static final String VALUE = "value";
-	private static final String TARGET = "target";
-	private static final String VARIABLE = "variable";
-	private static final String CONSTANT ="constant";
-	private static final String LENGTH  = "length";
-	private static final String START_NUM ="start_num";
+	
 	
 	private File fileXml;
 
@@ -131,36 +96,36 @@ public class ParseXml implements IParse {
 		NodeList rootList = nodeRoot.getChildNodes();
 		for (int root = 0; root < rootList.getLength(); root++) {
 			if (rootList.item(root).getNodeType() == Node.ELEMENT_NODE) {
-				if (rootList.item(root).getNodeName().equals(SOURCE)) {
+				if (rootList.item(root).getNodeName().equals(StaticVariablesXML.SOURCE)) {
 					source = new Source();
 					Element eElement = (Element) rootList.item(root);
-					source.setId(eElement.getAttribute(ID));
+					source.setId(eElement.getAttribute(StaticVariablesXML.ID));
 					NodeList docList = eElement.getChildNodes();
 					for (int i = 0; i < docList.getLength(); i++) {
 						if (docList.item(i).getNodeType() == Node.ELEMENT_NODE) {
 							Element eSource = (Element) docList.item(i);
-							if (eSource.getNodeName().equals(INFILE)) {
+							if (eSource.getNodeName().equals(StaticVariablesXML.INFILE)) {
 								source.setInputFormat(eSource
-										.getAttribute(FORMAT));
+										.getAttribute(StaticVariablesXML.FORMAT));
 								source.setField_names_format(eSource
-										.getAttribute(FIELD_NAMES_FORMAT));
+										.getAttribute(StaticVariablesXML.FIELD_NAMES_FORMAT));
 								source.setHeaderRows(Integer.parseInt(eSource
-										.getAttribute(HEADER_ROWS)));
+										.getAttribute(StaticVariablesXML.HEADER_ROWS)));
 								source.setFieldNameRowNumer(Integer.parseInt(eSource
-										.getAttribute(FIELD_NAMES_ROW_NUMER)));
+										.getAttribute(StaticVariablesXML.FIELD_NAMES_ROW_NUMER)));
 								source.setUpdate_mode_field_name((eSource
-										.getAttribute(UPDATE_MODE_FIELD_NAME))
+										.getAttribute(StaticVariablesXML.UPDATE_MODE_FIELD_NAME))
 										.charAt(0));
 								source.setPathInputFile(eSource
-										.getAttribute(PATH));
+										.getAttribute(StaticVariablesXML.PATH));
 							}
-							if (eSource.getNodeName().equals(OUTFILE)) {
+							if (eSource.getNodeName().equals(StaticVariablesXML.OUTFILE)) {
 								source.setAutputFormat(eSource
-										.getAttribute(FORMAT));
+										.getAttribute(StaticVariablesXML.FORMAT));
 								source.setError_column(eSource
-										.getAttribute(ERROR_COLUMN));
+										.getAttribute(StaticVariablesXML.ERROR_COLUMN));
 								source.setPathOutFile(eSource
-										.getAttribute(PATH));
+										.getAttribute(StaticVariablesXML.PATH));
 							}
 						}
 
@@ -191,18 +156,18 @@ public class ParseXml implements IParse {
 		NodeList rootList = nodeRoot.getChildNodes();
 		for (int root = 0; root < rootList.getLength(); root++) {
 			if (rootList.item(root).getNodeType() == Node.ELEMENT_NODE) {
-				if (rootList.item(root).getNodeName().equals(MAP)) {
+				if (rootList.item(root).getNodeName().equals(StaticVariablesXML.MAP)) {
 				
 					mapSource = new MapSource();
 					mapSourceList = new ArrayList<MapSource>();
 					Element elementMap = (Element) rootList.item(root);
-					mapSource.setIdSchema(elementMap.getAttribute(SCHEMA));
-					mapSource.setIdSource(elementMap.getAttribute(SOURCE));
+					mapSource.setIdSchema(elementMap.getAttribute(StaticVariablesXML.SCHEMA));
+					mapSource.setIdSource(elementMap.getAttribute(StaticVariablesXML.SOURCE));
 					NodeList mapList = elementMap.getChildNodes();
 					for (int map = 0; map < mapList.getLength(); map++) {
 						if (mapList.item(map).getNodeType() == Node.ELEMENT_NODE) {
 							if (mapList.item(map).getNodeName()
-									.equals(CONVERSION)) {
+									.equals(StaticVariablesXML.CONVERSION)) {
 								logger1.info("conversion");
 								fieldForamtList = new ArrayList<FieldFormat>();
 								lookUpList = new ArrayList<Map<String,String>>();
@@ -219,7 +184,7 @@ public class ParseXml implements IParse {
 												conversionList, con);
 										if (conversionList.item(con)
 												.getNodeName()
-												.equals(SUBSTITUDE)) {
+												.equals(StaticVariablesXML.SUBSTITUDE)) {
 											substitute = new Substitute();
 											String variable = null;
 											NodeList converList = conversionList
@@ -230,14 +195,14 @@ public class ParseXml implements IParse {
 														.getNodeType() == Node.ELEMENT_NODE) {
 													if (converList.item(conv)
 															.getNodeName()
-															.equals(TARGET)) {
+															.equals(StaticVariablesXML.TARGET)) {
 														variable = ((Element) converList
 																.item(conv))
-																.getAttribute(VARIABLE);
+																.getAttribute(StaticVariablesXML.VARIABLE);
 													}
 													if (converList.item(conv)
 															.getNodeName()
-															.equals(VALUE)) {
+															.equals(StaticVariablesXML.VALUE)) {
 														logger1.info("????????????????????????????");
 														value = new Value();
 													HashMap<String,String>  listConstant = new HashMap<String,String>();
@@ -258,9 +223,9 @@ public class ParseXml implements IParse {
 																valueList,
 																val);
 														
-														if (valueList.item(val).getNodeName().equals(CONSTANT)) {
+														if (valueList.item(val).getNodeName().equals(StaticVariablesXML.CONSTANT)) {
 															Element  elemConstant = ((Element)(valueList.item(val)));
-															listConstant.put( elemConstant.getAttribute(VALUE),elemConstant.getTextContent().trim());
+															listConstant.put( elemConstant.getAttribute(StaticVariablesXML.VALUE),elemConstant.getTextContent().trim());
 														       
 														}
 														value.setLookUp(lookUpSubstitude);
@@ -306,23 +271,23 @@ public class ParseXml implements IParse {
 	private void getLookUPList(List<Map<String,String>> lookUpList,
 			NodeList conversionList, int con) {
 	
-		if (conversionList.item(con).getNodeName().equals(LOOKUP)) {
+		if (conversionList.item(con).getNodeName().equals(StaticVariablesXML.LOOKUP)) {
 			HashMap<String,String> mapLookUp = new HashMap<String,String>();
 			Element element = ((Element) conversionList.item(con));
-			if(element.hasAttribute(LOOKUP_VARIABLE)){
-				mapLookUp.put(LOOKUP_VARIABLE,element.getAttribute(LOOKUP_VARIABLE));
+			if(element.hasAttribute(StaticVariablesXML.LOOKUP_VARIABLE)){
+				mapLookUp.put(StaticVariablesXML.LOOKUP_VARIABLE,element.getAttribute(StaticVariablesXML.LOOKUP_VARIABLE));
 			}
-             if(element .hasAttribute(LOOKUP_TABLE)){
-            	 mapLookUp.put(LOOKUP_TABLE,element.getAttribute(LOOKUP_TABLE));
+             if(element .hasAttribute(StaticVariablesXML.LOOKUP_TABLE)){
+            	 mapLookUp.put(StaticVariablesXML.LOOKUP_TABLE,element.getAttribute(StaticVariablesXML.LOOKUP_TABLE));
 			}
-             if(element.hasAttribute(LOOKUP_COL_IN_TABLE)){
-            	 mapLookUp.put(LOOKUP_COL_IN_TABLE,element.getAttribute(LOOKUP_COL_IN_TABLE));
+             if(element.hasAttribute(StaticVariablesXML.LOOKUP_COL_IN_TABLE)){
+            	 mapLookUp.put(StaticVariablesXML.LOOKUP_COL_IN_TABLE,element.getAttribute(StaticVariablesXML.LOOKUP_COL_IN_TABLE));
  			}
-             if(element .hasAttribute(RESULT_COL_IN_TABLE)){
-            	 mapLookUp.put(RESULT_COL_IN_TABLE,element.getAttribute(RESULT_COL_IN_TABLE));
+             if(element .hasAttribute(StaticVariablesXML.RESULT_COL_IN_TABLE)){
+            	 mapLookUp.put(StaticVariablesXML.RESULT_COL_IN_TABLE,element.getAttribute(StaticVariablesXML.RESULT_COL_IN_TABLE));
  			}
-             if(element .hasAttribute(UPDATE_INTO_VARIABLE)){
-            	 mapLookUp.put(UPDATE_INTO_VARIABLE,element.getAttribute(UPDATE_INTO_VARIABLE));
+             if(element .hasAttribute(StaticVariablesXML.UPDATE_INTO_VARIABLE)){
+            	 mapLookUp.put(StaticVariablesXML.UPDATE_INTO_VARIABLE,element.getAttribute(StaticVariablesXML.UPDATE_INTO_VARIABLE));
  			}
              lookUpList.add(mapLookUp);
 		}
@@ -339,22 +304,22 @@ public class ParseXml implements IParse {
 			NodeList conversionList, int con) {
 		FieldFormat fildFormat;
 
-		if (conversionList.item(con).getNodeName().equals(TRIM)
-				|| conversionList.item(con).getNodeName().equals(LEFT)
-				|| conversionList.item(con).getNodeName().equals(RIGHT)
-				|| conversionList.item(con).getNodeName().equals(MID)) {
+		if (conversionList.item(con).getNodeName().equals(StaticVariablesXML.TRIM)
+				|| conversionList.item(con).getNodeName().equals(StaticVariablesXML.LEFT)
+				|| conversionList.item(con).getNodeName().equals(StaticVariablesXML.RIGHT)
+				|| conversionList.item(con).getNodeName().equals(StaticVariablesXML.MID)) {
 	
 			fildFormat = new FieldFormat(
 					conversionList.item(con).getNodeName(),
 					((Element) conversionList.item(con))
-							.getAttribute(FIELD_NAME));
-			if (((Element) conversionList.item(con)).hasAttribute(LENGTH)){
+							.getAttribute(StaticVariablesXML.FIELD_NAME));
+			if (((Element) conversionList.item(con)).hasAttribute(StaticVariablesXML.LENGTH)){
 				fildFormat.setLengthSybol(Integer.parseInt(((Element) conversionList.item(con))
-							.getAttribute(LENGTH)));
+							.getAttribute(StaticVariablesXML.LENGTH)));
 			}
-			if (((Element) conversionList.item(con)).hasAttribute(START_NUM)){
+			if (((Element) conversionList.item(con)).hasAttribute(StaticVariablesXML.START_NUM)){
 				fildFormat.setStartNum(Integer.parseInt(((Element) conversionList.item(con))
-							.getAttribute(START_NUM)));
+							.getAttribute(StaticVariablesXML.START_NUM)));
 			}
 			fieldForamtList.add(fildFormat);
 		}
@@ -372,20 +337,24 @@ public class ParseXml implements IParse {
 		NodeList rootList = nodeRoot.getChildNodes();
 		for (int root = 0; root < rootList.getLength(); root++) {
 			if (rootList.item(root).getNodeType() == Node.ELEMENT_NODE) {
-				if (rootList.item(root).getNodeName().equals(SCHEMA)) {
+				if (rootList.item(root).getNodeName().equals(StaticVariablesXML.SCHEMA)) {
 					schema = new Schema();
 					listTable = new ArrayList<Table>();
 					Element eElement = (Element) rootList.item(root);
-					schema.setId(eElement.getAttribute(ID));
+					schema.setId(eElement.getAttribute(StaticVariablesXML.ID));
 					NodeList tableList = eElement.getChildNodes();
 					for (int i = 0; i < tableList.getLength(); i++) {
 						if (tableList.item(i).getNodeType() == Node.ELEMENT_NODE) {
 							Element tableElement = (Element) tableList.item(i);
-							if (tableElement.getNodeName().equals(TABLE)) {
+							if (tableElement.getNodeName().equals(StaticVariablesXML.TABLE)) {
 								table = new Table();
 								listField = new ArrayList<Field>();
 								table.setNameTable(tableElement
-										.getAttribute(NAME));
+										.getAttribute(StaticVariablesXML.NAME));
+								if (tableElement.hasAttribute(StaticVariablesXML.ROOT)){
+									table.setRoot( Boolean.valueOf(tableElement
+											.getAttribute(StaticVariablesXML.ROOT)));
+								}
 								NodeList fieldList = tableElement
 										.getChildNodes();
 								for (int fd = 0; fd < fieldList.getLength(); fd++) {
@@ -394,14 +363,14 @@ public class ParseXml implements IParse {
 										Element fieldElement = (Element) fieldList
 												.item(fd);
 										if (fieldElement.getNodeName().equals(
-												FIELD)) {
+												StaticVariablesXML.FIELD)) {
 											field = new Field();
 											field.setName(fieldElement
-													.getAttribute(NAME));
+													.getAttribute(StaticVariablesXML.NAME));
 											if (fieldElement
-													.hasAttribute(FOREIGN_KEY_TABLE)) {
+													.hasAttribute(StaticVariablesXML.FOREIGN_KEY_TABLE)) {
 												field.setNameTableForeignKey(fieldElement
-														.getAttribute(FOREIGN_KEY_TABLE));
+														.getAttribute(StaticVariablesXML.FOREIGN_KEY_TABLE));
 											}
 											listField.add(field);
 										}

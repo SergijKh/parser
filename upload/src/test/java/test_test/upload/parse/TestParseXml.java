@@ -34,6 +34,7 @@ import test_test.upload.model.map.substitute.Value;
 import test_test.upload.model.parse.MapSource;
 import test_test.upload.model.parse.Schema;
 import test_test.upload.model.parse.Source;
+import test_test.upload.model.staticvariablesxmlfile.StaticVariablesXML;
 import test_test.upload.parsexml.ParseXml;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -110,7 +111,7 @@ public class TestParseXml {
 					.getAutputFormat());
 		}
 	}
-@Ignore
+
 	@Test
 	public void getTestShema() {
 		Schema schema = new Schema("schema1");
@@ -121,11 +122,13 @@ public class TestParseXml {
 		listFealdClient.add(new Field("Client_Name"));
 		tableClient.setListFeald(listFealdClient);
 		Table tableOrder = new Table("Order");
+		tableOrder.setRoot(true);
 		List<Field> listFieldOrder = new ArrayList<Field>();
 		listFieldOrder.add(new Field("Order_No"));
 		listFieldOrder.add((new Field("Client_No", "Client")));
 		listFieldOrder.add(new Field("Quantity"));
 		listFieldOrder.add(new Field("Delivery_Date"));
+		listFieldOrder.add(new Field("Goods_Name"));
 		tableOrder.setListFeald(listFieldOrder);
 		listTable.add(tableClient);
 		listTable.add(tableOrder);
@@ -140,8 +143,13 @@ public class TestParseXml {
 				assertEquals(schema.getListTable().get(tab).getNameTable(),
 						schemaParse.get(i).getListTable().get(tab)
 								.getNameTable());
+				assertEquals(schema.getListTable().get(tab).isRoot(),
+						schemaParse.get(i).getListTable().get(tab).isRoot());
 				for (int field = 0; field < schemaParse.get(i).getListTable()
 						.get(tab).getListField().size(); field++) {
+					 logger1.info("size//////////"+field + " "+schemaParse.get(i)
+								.getListTable().get(tab).getListField().get(field)
+								.getName()+ " " + tab);
 					assertEquals(schema.getListTable().get(tab).getListField()
 							.get(field).getName(), schemaParse.get(i)
 							.getListTable().get(tab).getListField().get(field)
@@ -156,7 +164,7 @@ public class TestParseXml {
 			}
 		}
 	}
-	
+	@Ignore
 	@Test
 	public void testMapSource(){
 		MapSource mapSource = new MapSource();
@@ -167,29 +175,29 @@ public class TestParseXml {
 		listfildFormat.add( new FieldFormat("trim","Client.Name"));
 		List<Map<String,String>> listLookUp =  new ArrayList<Map<String,String>>();
 		Map<String,String> map = new HashMap<String,String>();
-		map.put(ParseXml.LOOKUP_VARIABLE,"Client.Client_No");
-		map.put(ParseXml.LOOKUP_TABLE,"Client");
-		map.put(ParseXml.LOOKUP_COL_IN_TABLE,"Client_No");
-		map.put(ParseXml.RESULT_COL_IN_TABLE,"Client_Name");
-		map.put(ParseXml.UPDATE_INTO_VARIABLE,"Order.Client_Name");
+		map.put(StaticVariablesXML.LOOKUP_VARIABLE,"Goods.Goods_No");
+		map.put(StaticVariablesXML.LOOKUP_TABLE,"Goods");
+		map.put(StaticVariablesXML.LOOKUP_COL_IN_TABLE,"Goods_No");
+		map.put(StaticVariablesXML.RESULT_COL_IN_TABLE,"Goods_Name");
+		map.put(StaticVariablesXML.UPDATE_INTO_VARIABLE,"Order.Goods_Name");
 		listLookUp.add(map);
 		conversion.setLookUp(listLookUp);
 		conversion.setListFormat(listfildFormat);
 		List <Substitute> listSubstitute = new  ArrayList<Substitute>();
 		Substitute substitute = new Substitute();
-		substitute.setVariable("Order.Delivery_Date");
+		substitute.setVariable("Order.Quantity");
 		Value value = new Value();
 		HashMap<String,String> constant = new HashMap<String,String>();
-		constant.put("Contst1","");
+		constant.put("Contst1","-");
 		List<FieldFormat> listfildFormatSub = new ArrayList<FieldFormat>();
-		listfildFormatSub.add( new FieldFormat("trim","Delivery_Date"));
+		listfildFormatSub.add( new FieldFormat("trim","Order.Quantity"));
 		value.setConstant(constant);
 		List<Map<String,String>> listLookUpSub =  new ArrayList<Map<String,String>>();
 		Map<String,String> mapSub = new HashMap<String,String>();
-		mapSub.put(ParseXml.LOOKUP_VARIABLE,"Order.Delivery_Date");
-		mapSub.put(ParseXml.LOOKUP_TABLE,"Order");
-		mapSub.put(ParseXml.LOOKUP_COL_IN_TABLE,"Delivery_Date");
-		mapSub.put(ParseXml.RESULT_COL_IN_TABLE,"Order.Delivery_Date");
+		mapSub.put(StaticVariablesXML.LOOKUP_VARIABLE,"Goods.Goods_No");
+		mapSub.put(StaticVariablesXML.LOOKUP_TABLE,"Goods");
+		mapSub.put(StaticVariablesXML.LOOKUP_COL_IN_TABLE,"Goods_No");
+		mapSub.put(StaticVariablesXML.RESULT_COL_IN_TABLE,"Goods_Name");
 		listLookUpSub.add(mapSub);
 		
 		value.setLookUp(listLookUpSub);
@@ -206,21 +214,21 @@ public class TestParseXml {
 			assertEquals(mapSource.getIdSource(), mapSourceParse.get(i).getIdSource());
 			assertEquals(mapSource.getConversion().getFormat().get(0).getFieldName(), mapSourceParse.get(i).getConversion().getFormat().get(0).getFieldName());
 			assertEquals(mapSource.getConversion().getFormat().get(0).getNameFormat(), mapSourceParse.get(i).getConversion().getFormat().get(0).getNameFormat());
-			assertEquals(mapSource.getConversion().getLookUp().get(0).get(ParseXml.LOOKUP_VARIABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(ParseXml.LOOKUP_VARIABLE));
-			assertEquals(mapSource.getConversion().getLookUp().get(0).get(ParseXml.LOOKUP_TABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(ParseXml.LOOKUP_TABLE));
-			assertEquals(mapSource.getConversion().getLookUp().get(0).get(ParseXml.LOOKUP_COL_IN_TABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(ParseXml.LOOKUP_COL_IN_TABLE));
-			assertEquals(mapSource.getConversion().getLookUp().get(0).get(ParseXml.RESULT_COL_IN_TABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(ParseXml.RESULT_COL_IN_TABLE));
-			assertEquals(mapSource.getConversion().getLookUp().get(0).get(ParseXml.UPDATE_INTO_VARIABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(ParseXml.UPDATE_INTO_VARIABLE));
+			assertEquals(mapSource.getConversion().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_VARIABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_VARIABLE));
+			assertEquals(mapSource.getConversion().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_TABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_TABLE));
+			assertEquals(mapSource.getConversion().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_COL_IN_TABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_COL_IN_TABLE));
+			assertEquals(mapSource.getConversion().getLookUp().get(0).get(StaticVariablesXML.RESULT_COL_IN_TABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(StaticVariablesXML.RESULT_COL_IN_TABLE));
+			assertEquals(mapSource.getConversion().getLookUp().get(0).get(StaticVariablesXML.UPDATE_INTO_VARIABLE), mapSourceParse.get(i).getConversion().getLookUp().get(0).get(StaticVariablesXML.UPDATE_INTO_VARIABLE));
 			
 			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getVariable(), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getVariable());
 			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getConstant().get("Contst1"), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getConstant().get("Contst1"));
 			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getFormat().get(0).getFieldName(), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getFormat().get(0).getFieldName());
 			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getFormat().get(0).getNameFormat(), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getFormat().get(0).getNameFormat());
 			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getFormat().get(0).getNameFormat(), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getFormat().get(0).getNameFormat());
-			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(ParseXml.LOOKUP_VARIABLE), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(ParseXml.LOOKUP_VARIABLE));
-			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(ParseXml.LOOKUP_TABLE), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(ParseXml.LOOKUP_TABLE));
-			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(ParseXml.LOOKUP_COL_IN_TABLE), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(ParseXml.LOOKUP_COL_IN_TABLE));
-			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(ParseXml.RESULT_COL_IN_TABLE), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(ParseXml.RESULT_COL_IN_TABLE));
+			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_VARIABLE), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_VARIABLE));
+			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_TABLE), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_TABLE));
+			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_COL_IN_TABLE), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(StaticVariablesXML.LOOKUP_COL_IN_TABLE));
+			assertEquals(mapSource.getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(StaticVariablesXML.RESULT_COL_IN_TABLE), mapSourceParse.get(i).getConversion().getListSubstitute().get(0).getValue().getLookUp().get(0).get(StaticVariablesXML.RESULT_COL_IN_TABLE));
 		}
 		
 		
