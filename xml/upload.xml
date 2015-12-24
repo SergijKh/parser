@@ -18,7 +18,7 @@
 </schema>
 
 <source id='src1'>
- <infile format='txt-tab' header_rows = '3' field_names_row_numer='3' field_names_format='table.field' update_mode_field_name='I' path='D:\workEclipse\project_1\excel' />
+ <infile format='txt-tab' header_rows = '3' field_names_row_numer='3' field_names_format='table.field' update_mode_field_name='UM' path='D:\workEclipse\project_1\excel' />
  <outfile format='txt-tab'  error_column='ERR' path='D:\output.txt'/>
 </source>
 <map source = 'src1' schema='schema1'>
