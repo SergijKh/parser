@@ -28,7 +28,7 @@ public class Source {
 	/**
 	 * does matter update or insert data 
 	 */
-	private char update_mode_field_name;
+	private  String  update_mode_field_name;
 	/**
 	 * the path to a file that contains the data to insert and update
 	 */
@@ -68,7 +68,7 @@ public class Source {
 	 * @param headerRows
 	 */
 	public Source(int fieldNameRowNumer, String field_names_format,
-			char update_mode_field_name, String pathInputFile,
+			String update_mode_field_name, String pathInputFile,
 			String autputFormat, String error_column, String pathOutFile,
 			String inputFormat, int headerRows) {
 		this.fieldNameRowNumer = fieldNameRowNumer;
@@ -97,7 +97,7 @@ public class Source {
 	 */
 	public Source(String id, String inputFormat, int headerRows,
 			int fieldNameRowNumer, String field_names_format,
-			char update_mode_field_name, String pathInputFile,
+			String update_mode_field_name, String pathInputFile,
 			String autputFormat, String error_column, String pathOutFile) {
 		this.id = id;
 		this.inputFormat = inputFormat;
@@ -161,13 +161,13 @@ public class Source {
 	/**
 	 * @return the update_mode_field_name
 	 */
-	public char getUpdate_mode_field_name() {
+	public String getUpdate_mode_field_name() {
 		return update_mode_field_name;
 	}
 	/**
 	 * @param update_mode_field_name the update_mode_field_name to set
 	 */
-	public void setUpdate_mode_field_name(char update_mode_field_name) {
+	public void setUpdate_mode_field_name(String  update_mode_field_name) {
 		this.update_mode_field_name = update_mode_field_name;
 	}
 	/**
@@ -254,7 +254,7 @@ public class Source {
 				+ ((pathInputFile == null) ? 0 : pathInputFile.hashCode());
 		result = prime * result
 				+ ((pathOutFile == null) ? 0 : pathOutFile.hashCode());
-		result = prime * result + update_mode_field_name;
+		result = prime * result + update_mode_field_name.length();
 		return result;
 	}
 	/* (non-Javadoc)

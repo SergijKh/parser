@@ -2,14 +2,21 @@ package test_test.upload.parsexml;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.stream.StreamSource;
+
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -27,15 +34,18 @@ import test_test.upload.model.map.substitute.Substitute;
 import test_test.upload.model.map.substitute.Value;
 import test_test.upload.model.parse.MapSource;
 import test_test.upload.model.parse.Schema;
+//import test_test.upload.model.parse.Schema;
 import test_test.upload.model.parse.Source;
 import test_test.upload.model.staticvariablesxmlfile.StaticVariablesXML;
 
-@Component
+@Component("parseXml")
 public class ParseXml implements IParse {
 	private static final Logger logger1 = Logger.getLogger(ParseXml.class);
 	
-	
+	//xml file 
 	private File fileXml;
+	
+	private File schemaFile;
 
 	
 
@@ -77,9 +87,10 @@ public class ParseXml implements IParse {
 		DocumentBuilder builder = null;
 		Document doc = null;
 		try {
+			if (validation()){
 			builder = factory.newDocumentBuilder();
 			doc = builder.parse(fileXml);
-
+			}
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 
 			logger1.error(e);
@@ -114,8 +125,7 @@ public class ParseXml implements IParse {
 								source.setFieldNameRowNumer(Integer.parseInt(eSource
 										.getAttribute(StaticVariablesXML.FIELD_NAMES_ROW_NUMER)));
 								source.setUpdate_mode_field_name((eSource
-										.getAttribute(StaticVariablesXML.UPDATE_MODE_FIELD_NAME))
-										.charAt(0));
+										.getAttribute(StaticVariablesXML.UPDATE_MODE_FIELD_NAME)));
 								source.setPathInputFile(eSource
 										.getAttribute(StaticVariablesXML.PATH));
 							}
@@ -203,9 +213,8 @@ public class ParseXml implements IParse {
 													if (converList.item(conv)
 															.getNodeName()
 															.equals(StaticVariablesXML.VALUE)) {
-														logger1.info("????????????????????????????");
 														value = new Value();
-													HashMap<String,String>  listConstant = new HashMap<String,String>();
+													Map<String,String>  listConstant = new TreeMap<String,String>();
 														fieldSubstitudeForamtList = new ArrayList<FieldFormat>();
 														lookUpSubstitude = new ArrayList<Map<String,String>>();
 														NodeList valueList = converList.item(conv)
@@ -226,10 +235,11 @@ public class ParseXml implements IParse {
 														if (valueList.item(val).getNodeName().equals(StaticVariablesXML.CONSTANT)) {
 															Element  elemConstant = ((Element)(valueList.item(val)));
 															listConstant.put( elemConstant.getAttribute(StaticVariablesXML.VALUE),elemConstant.getTextContent().trim());
-														       
+								 
 														}
 														value.setLookUp(lookUpSubstitude);
 														value.setFormat(fieldSubstitudeForamtList);
+														logger1.info(listConstant);
 														value.setConstant(listConstant);
 															}
 														}
@@ -389,5 +399,42 @@ public class ParseXml implements IParse {
 
 		return listSchema;
 	}
+	
+	
+    public File getSchemaFile() {
+		return schemaFile;
+	}
 
+	public void setSchemaFile(File schemaFile) {
+		this.schemaFile = schemaFile;
+	}
+
+	public boolean validation(){
+    	boolean valid = false;
+    	StreamSource xmlFile = new StreamSource(fileXml);
+    	SchemaFactory schemaFactory = SchemaFactory
+    	    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    	javax.xml.validation.Schema schema = null;
+		try {
+			schema = schemaFactory.newSchema(schemaFile);
+		} catch (SAXException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	Validator validator = schema.newValidator();
+    	try {
+			validator.validate(xmlFile);
+		    valid = true;
+    	}catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	 catch (SAXException e) {
+    		 logger1.info(xmlFile.getSystemId()+"is NOT valid");
+    		 logger1.info("Reason: " + e.getLocalizedMessage());
+    	}
+    	
+    	return valid;
+	 
+ }
 }

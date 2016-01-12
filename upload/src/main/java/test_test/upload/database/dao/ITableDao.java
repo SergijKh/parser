@@ -17,5 +17,9 @@ public interface ITableDao {
 	 * select one last row  
 	 */
 	 void selectOneLastRow(Table table);
+	 /**
+	  * 
+	  */
+	 void updateOneRowTable(Table table);
 	
 }

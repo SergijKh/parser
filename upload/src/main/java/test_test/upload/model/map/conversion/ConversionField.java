@@ -64,6 +64,7 @@ public class ConversionField {
 	 * @return String conversion
 	 */
 	public  String oneValueConversion(String valueIn, FieldFormat fieldFormat) {
+		logger1.info("valueIn>>>>>>>>>>>>>>>>>....."+valueIn);
 		String value = null;
 			             try{
 			             if (fieldFormat.getNameFormat().equals(StaticVariablesXML.TRIM)){

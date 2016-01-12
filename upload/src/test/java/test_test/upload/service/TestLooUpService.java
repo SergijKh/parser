@@ -57,6 +57,6 @@ private static final Logger logger1 = Logger.getLogger(TestParseXml.class);
 		map.put(StaticVariablesXML.UPDATE_INTO_VARIABLE,"Order.Goods_Name");
 	      String value = lookUpService.seletGetFieldbyID(map);
 	      logger1.info("value "+value);
-	      assertEquals( "tv", value );
+	      assertEquals( "tvvvvvvvvvvvv", value );
 	}
 }

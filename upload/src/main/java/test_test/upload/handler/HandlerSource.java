@@ -47,7 +47,7 @@ public class HandlerSource extends DefaultHandler {
 				}
 				if (atts.getQName(i).equals(UPDATE_MODE_FIELD_NAME)) {
 					inputFormat = atts.getValue(i);
-					newSources.setUpdate_mode_field_name(inputFormat.charAt(0));
+					newSources.setUpdate_mode_field_name(inputFormat);
 				}
 				if (atts.getQName(i).equals(FIELD_NAMES_FORMAT)) {
 					inputFormat = atts.getValue(i);

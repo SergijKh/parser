@@ -84,7 +84,7 @@ public class TestParseXml {
 	@Ignore
 	@Test
 	public void getTestSource() {
-		Source source = new Source("src1", "txt-tab", 2, 1, "table.field", 'I',
+		Source source = new Source("src1", "txt-tab", 2, 1, "table.field", "I",
 				"D:\\src.txt", "txt-tab", "ERR", "D:\\output.txt");
 		ArrayList<Source> sourceParse = (ArrayList<Source>) parseXml
 				.getSource(doc);

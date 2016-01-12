@@ -113,4 +113,30 @@ IConvertDataRDBMSFieldType convert;
 		this.convert = convertMysql;
 	}
 
+@Override
+public void updateOneRowTable(Table table) {
+	String primaryKay = getNameFieldPrimaryKay( table);
+	StringBuilder  fieldName = new StringBuilder();
+	StringBuilder  fieldNameWhere = new StringBuilder();
+	String sql = "update "+ table.getNameTable()+" set ";
+	 for (int i = 0; i < table.getListField().size(); i ++){
+		if (primaryKay.equalsIgnoreCase(table.getListField().get(i).getName())){
+			fieldNameWhere.append( " where "+primaryKay+" = ?");
+		}else{
+		if (i == table.getListField().size()-1){
+		 fieldName.append( table.getListField().get(i).getName() +"= ?");
+		}else{
+			 fieldName.append( table.getListField().get(i).getName() +"= ?,");
+		}
+	 }
+	 }
+	 String update = sql+fieldName.toString()+fieldNameWhere.toString();
+	 Object [] sd = convert.convertDataTypeUpdateBase(table, jdbcTemplate,primaryKay);
+	for (int l = 0 ; l < sd.length; l++){
+	 logger1.info("sd[[[[[[[[[[[[[[[[[[[[["+sd[l]);
+	}
+	jdbcTemplate.update(update,sd);
+	
+}
+
 }

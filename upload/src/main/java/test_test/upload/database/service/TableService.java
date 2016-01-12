@@ -25,4 +25,9 @@ TableDao tableDao;
 		return tableDao.getNameFieldPrimaryKay(table);
 	}
 
+	@Override
+	public void updateOneRowTable(Table table) {
+		 tableDao.updateOneRowTable(table);	
+	}
+
 }

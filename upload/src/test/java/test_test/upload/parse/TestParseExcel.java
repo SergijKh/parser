@@ -41,6 +41,7 @@ import test_test.upload.model.parse.Schema;
 import test_test.upload.model.parse.Source;
 import test_test.upload.model.staticvariablesxmlfile.StaticVariablesXML;
 import test_test.upload.parseexcel.ParseExcelFile;
+import test_test.upload.parsexml.IParse;
 import test_test.upload.parsexml.ParseXml;
 
 	@RunWith(SpringJUnit4ClassRunner.class)
@@ -51,6 +52,8 @@ import test_test.upload.parsexml.ParseXml;
 
 		@Autowired
 		private ParseExcelFile parseExcel;
+		@Autowired
+		private ParseXml parseXml;
 		private Document doc;
 		 @Autowired
 		    LookUpService lookUpService;
@@ -80,16 +83,10 @@ import test_test.upload.parsexml.ParseXml;
 		}
         @Ignore
 		@Test
-		public void getParseheader() {
+		public void getParseheader() throws IOException {
 			String [] headerArray ={"Client.Client_No","Client.Client_Name","Order.Order_No","Order.Client_No","Order.Quantity","Order.Delivery_Date"};
 			String file = ("D:\\workEclipse\\project_1\\excel\\src.xlsx");
 			ArrayList<String> headerList=null;
-			try {
-				headerList = (ArrayList<String>) parseExcel.getHeaderList(parseExcel.readFromExcel(file), 2);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			logger1.info(headerList.get(1));
 			assertEquals(headerArray.length,headerList.size());
 			for (int  i = 0 ; i < headerList.size(); i++){
@@ -101,7 +98,7 @@ import test_test.upload.parsexml.ParseXml;
         @Ignore
 		@SuppressWarnings("null")
 		@Test
-		public void getOneRow() {
+		public void getOneRow() throws IOException {
 			 HashMap <String,String> exampl = new HashMap<String,String>();
 			  exampl.put("Client.Client_No","");
 			  exampl.put("Client.Client_Name","Sergey");
@@ -112,15 +109,6 @@ import test_test.upload.parsexml.ParseXml;
 			String file = ("D:\\workEclipse\\project_1\\excel\\src.xlsx");
 			 HashMap <String,String> resultHashMap = new  HashMap <String,String>();
 			ArrayList<String> headerList=null;
-			try {
-				headerList = (ArrayList<String>) parseExcel.getHeaderList(parseExcel.readFromExcel(file), 2);
-				Sheet sheet = parseExcel.readFromExcel(file);
-				 Row  rowData = sheet.getRow(3);
-				 parseExcel.getOneRow(rowData,headerList ,resultHashMap);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			logger1.info(headerList.get(1));
 			assertEquals(exampl.size(),resultHashMap.size());
 			for (int  i = 0 ; i < resultHashMap.size(); i++){
@@ -220,6 +208,8 @@ import test_test.upload.parsexml.ParseXml;
 		@Ignore
 		@Test
 		public void  testGetListTable(){
+			Source source = new Source("src1", "txt-tab", 2, 1, "table.field", "UM__",
+					"D:\\src.txt", "txt-tab", "ERR", "D:\\output.txt");
 			Schema schema = new Schema("schema1");
 			List<Table> listTable = new ArrayList<Table>();
 			Table tableClient = new Table("Client");
@@ -245,7 +235,7 @@ import test_test.upload.parsexml.ParseXml;
 			 hashMapRowAndheaderexampl.put("Order.Client_No","");
 			 hashMapRowAndheaderexampl.put("Order.Quantity","quentity");
 			 hashMapRowAndheaderexampl.put("Order.Delivery_Date","05.11.2015");
-			 List<Table>  listTableR =  parseExcel.getListTable(schema,hashMapRowAndheaderexampl);
+			 List<Table>  listTableR =  parseExcel.getListTable(schema,hashMapRowAndheaderexampl,source.getUpdate_mode_field_name());
 			 for (int i = 0 ; i < listTableR.size(); i++ ){
 				   Table  tableResult = listTableR.get(i);
 				    Table table = listTable.get(i);
@@ -259,7 +249,7 @@ import test_test.upload.parsexml.ParseXml;
 			 }
 		}
 		
-		
+		@Ignore
 		@Test
 		public void testSerchForeigKey(){
 			ArrayList <Table> listResultTable = new ArrayList<Table>();
@@ -273,7 +263,7 @@ import test_test.upload.parsexml.ParseXml;
 			tableClient.setListFeald(listFealdClient);
 			Table tableOrder = new Table("orde");
 			List<Field> listFieldOrder = new ArrayList<Field>();
-			listFieldOrder.add(new Field("Order_No"));
+			listFieldOrder.add(new Field("Orde_No"));
 			listFieldOrder.add((new Field("Client_No", "Client")));
 		Field fieldOrdrQuantity = new Field("Quantity");
 		fieldOrdrQuantity.setValue("Quentity");
@@ -288,8 +278,24 @@ import test_test.upload.parsexml.ParseXml;
 			listTable.add(tableClient);
 			listTable.add(tableOrder);
 			for (int i = 0 ; i < listTable.size(); i++){
-			parseExcel.serchForeigKey(listTable.get(i), listTable, listResultTable);
+			//parseExcel.addOneRowExcelInDatabase(listTable.get(i), listTable, listResultTable);
 			}
 			logger1.info("message"+listResultTable.size());
 		}
+		
+		@Test
+		public void testParseExcelFile(){
+			
+			try {
+				parseXml.setFileXml(new File ("D:\\workEclipse\\americanwork\\parser\\xml\\upload.xml"));
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			parseExcel.parseExcelFile( parseXml);
+		}
+		
 }

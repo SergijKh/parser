@@ -63,4 +63,19 @@ public class TestTableService {
 	    assertEquals("30",tableClient.getListField().get(0).getValue());
 	    assertEquals("Sergey",tableClient.getListField().get(1).getValue());
 	}
+    
+    @Test
+	public void testUpdateSource() {
+		Table tableClient = new Table("Client");
+		List<Field> listFealdClient = new ArrayList<Field>();
+		Field fieldNo = new Field("Client_No");
+		fieldNo.setValue("41");
+		listFealdClient.add(fieldNo);
+		Field fieldName = new Field("Client_Name");
+		fieldName.setValue("ggggggg");
+		listFealdClient.add(fieldName);
+		tableClient.setListFeald(listFealdClient);
+	    tableService.updateOneRowTable(tableClient);
+	    assertEquals(true, true);
+	}
 }

@@ -19,4 +19,12 @@ public interface IConvertDataRDBMSFieldType {
 	 * @return
 	 */
 	 public String getNameFielDPrimaryAutoincrement(Table table, JdbcTemplate jdbcTemplate);
+	 /**
+	  * method update in base 
+	  * @param table
+	  * @param jdbcTemplate JDBC Template 
+	  * @param primaryKay primary field 
+	  * @return
+	  */
+	 public Object[]  convertDataTypeUpdateBase(Table table, JdbcTemplate jdbcTemplate, String primaryKay);
 }

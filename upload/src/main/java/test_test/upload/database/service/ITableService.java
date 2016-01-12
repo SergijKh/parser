@@ -13,7 +13,7 @@ import test_test.upload.model.form.Table;
 
 public interface ITableService {
 	/**
-	 * add one row in table 
+	 * add one row  table in  database
 	 * @param table
 	 * @return
 	 */
@@ -28,4 +28,9 @@ public interface ITableService {
 	 * @return
 	 */
 	public String getNameFieldPrimaryKay(Table table); 
-}    
+	/**
+	 * update one row  table in  database 
+	 * @param table
+	 */
+	public void  updateOneRowTable(Table table);
+}     

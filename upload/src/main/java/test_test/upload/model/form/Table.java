@@ -23,6 +23,10 @@ public class Table {
 	 */
 	private  boolean root;
 
+	/**
+	 *  true where table is update 
+	 */
+	 private boolean update;
 	
 	/**
 	 * empty constructor
@@ -32,7 +36,22 @@ public class Table {
 		// TODO Auto-generated constructor stub
 	}
 	
-	
+	/**
+	 * 
+	 * @param nameTable
+	 * @param listField
+	 * @param root
+	 * @param update
+	 */
+	public Table(String nameTable, List<Field> listField, boolean root, boolean update) {
+		super();
+		this.nameTable = nameTable;
+		this.listField = listField;
+		this.root = root;
+		this.update = update;
+	}
+
+
 	/**
 	 * @param nameTable name table 
 	 * @param listField  list field 
@@ -102,6 +121,21 @@ public class Table {
 	 */
 	public void setRoot(boolean root) {
 		this.root = root;
+	}
+
+
+	public boolean isUpdate() {
+		return update;
+	}
+
+
+	public void setUpdate(boolean update) {
+		this.update = update;
+	}
+
+
+	public void setListField(List<Field> listField) {
+		this.listField = listField;
 	}
  
 }

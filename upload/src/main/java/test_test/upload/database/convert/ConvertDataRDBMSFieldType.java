@@ -77,11 +77,11 @@ public class ConvertDataRDBMSFieldType implements IConvertDataRDBMSFieldType {
 			logger1.info("field value  //////////////////"+field.getValue()+" field name   //////////////////"+field.getName());
 			while (iteratorKey.hasNext()) {
 				keyF = iteratorKey.next();
-				logger1.info("keyF //////////////////"+keyF);
+				logger1.info(field.getName()+ "keyF //////////////////"+keyF);
 				if (field.getName().equalsIgnoreCase(keyF)) {
 					
 					typeField = mapField.get(keyF);
-					logger1.info(keyF + "  typeField "+typeField);
+					logger1.info(keyF + "  typeField "+typeField+" "+field.getValue()+"/////////////////////////////");
 					typeObject = translatorMysql.translator(typeField,
 							field.getValue());
 					logger1.info("type Object "+typeObject);
@@ -213,6 +213,58 @@ public class ConvertDataRDBMSFieldType implements IConvertDataRDBMSFieldType {
 		 return pkey;
 	 }
 
-	
+	public Object[]  convertDataTypeUpdateBase(Table table, JdbcTemplate jdbcTemplate, String primaryKay){
+		Object[] object = null;
+		Object  primary = null;
+		Field field = null;
+		String keyF = null;// key name field database in map
+		String typeField = null; // type field in database
+		Object typeObject = null; // object field translator
+		DataSource data = jdbcTemplate.getDataSource();
+		DatabaseMetaData metaData = null;
+		ArrayList<String> listTablist = null;
+		Map<String, Map<String, String>> mapTable = null;
+		try {
+			metaData = data.getConnection().getMetaData();
+			listTablist = getTablesMetadata(metaData);
+			mapTable = getColumnsMetadata(listTablist, metaData);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			logger1.error(e);
+		}
+		List<Field> listField = table.getListField();
+		logger1.info("listField............"+(listField.size()));
+		Map<String, String> mapField = (mapTable.get((table.getNameTable()).toLowerCase()));
+		Set<String> setKeyField = mapField.keySet();
+     	Iterator<String> iteratorKey = null ;
+		object = new Object[listField.size()];
+		 int count = 0 ;
+		for (int i = 0; i < listField.size(); i++) {
+			field = listField.get(i);
+			iteratorKey = setKeyField.iterator();
+			logger1.info("field value  //////////////////"+field.getValue()+" field name   //////////////////"+field.getName());
+			while (iteratorKey.hasNext()) {
+				keyF = iteratorKey.next();
+				logger1.info(field.getName()+"keyF //////////////////"+keyF);
+				if (field.getName().equalsIgnoreCase(keyF)) {
+					
+					typeField = mapField.get(keyF);
+					logger1.info(keyF + "  typeField "+typeField);
+					typeObject = translatorMysql.translator(typeField,
+							field.getValue());
+					logger1.info("type Object "+typeObject);
+					if (field.getName().equals(primaryKay)){
+						primary = typeObject;
+					}else{
+					  object[count++] = typeObject;
+					}
+				}
+			}
+			
+		}
+		  object[object.length-1] = primary;
+		return object;
+		
+	}
 	
 }

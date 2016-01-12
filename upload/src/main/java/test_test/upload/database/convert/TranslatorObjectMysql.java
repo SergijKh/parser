@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -37,12 +38,11 @@ public class TranslatorObjectMysql implements Itranslator {
 	@SuppressWarnings("unused")
 	@Override
 	public Object translator(String typeField, String value) {
-		
+		logger1.info("valuemmmmmmmmmmmmmmmmmm" + (value));
 		Object typeObject = null;
-		if (value == null){
+		if (value == null||value.equals("")){
 			
-		}
-		//logger1.info("valuemmmmmmmmmmmmmmmmmm" + (value));
+		}	
 		else if ((value != null)||(!(value.equals(" ")))) {
 
 			if ((typeField.equalsIgnoreCase(TypeSQL.TINYTEXT))
@@ -67,7 +67,8 @@ public class TranslatorObjectMysql implements Itranslator {
 					|| (typeField.equalsIgnoreCase(TypeSQL.INT))
 					|| (typeField.equalsIgnoreCase(TypeSQL.INT_UNSIGNED))) {
 				logger1.info("value" + value);
-				typeObject = Integer.valueOf(value);
+				double d = Double.parseDouble(value);
+				typeObject = (int)d;
 
 			}
 			if ((typeField.equalsIgnoreCase(TypeSQL.BIGINT))) {
@@ -87,13 +88,13 @@ public class TranslatorObjectMysql implements Itranslator {
 
 			}
 			if ((typeField.equalsIgnoreCase(TypeSQL.DATE))) {
-				//typeObject = new Date(Long.valueOf(value));
-				 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-				 java.util.Date parsedDate;
+				 SimpleDateFormat dateFormat = new SimpleDateFormat("dd.M.yyyy");
+				 java.util.Date parsedDate = null;
 					try {
-						parsedDate = (Date) dateFormat.parse(value);
+						parsedDate =(Date) dateFormat.parse( value );
 						
 						typeObject = new Timestamp(parsedDate.getTime());
+					
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 					    logger1.info(e);
